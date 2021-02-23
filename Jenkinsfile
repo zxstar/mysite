@@ -44,6 +44,9 @@ node {
 	}
 	
 	stage('镜像部署') {
-		sshPublisher(publishers: [sshPublisherDesc(configName: 'app', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/opt/jenkins_shell/deploy.sh $harbor_url $harbor_project $image_name $tag', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+		//sshPublisher(publishers: [sshPublisherDesc(configName: 'app', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/opt/jenkins_shell/deploy.sh $harbor_url $harbor_project $image_name $tag', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+		// 测试public over ssh
+		sshPublisher(publishers: [sshPublisherDesc(configName: 'app', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'mkdir /root/overssh', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+	
 	}
 }
