@@ -3,6 +3,14 @@ def git_auth = "github-mysite"
 //git的url
 def git_url = "https://github.com/zxstar/mysite.git/"
 
+//docker tag
+def tag="latest"
+//harbor url
+def harbor_url = "8.136.189.162"
+//harbor project
+def harbor_project = "mysite"
+//def imagename
+def image_name = "mysite"
 node {
         stage('pull code') {
             checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${git_auth}", url: "${git_url}"]]])
@@ -18,5 +26,10 @@ node {
 		//		cd ${project_name}
 		//		$(scanerHome}/bin/sonar-scanner
 		//}
+	}
+	
+	stage('代码编译打包') {
+		sh "tar zcf mysite.tar.gz *.html"
+		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag}"
 	}
 }
