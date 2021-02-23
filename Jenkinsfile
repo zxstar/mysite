@@ -27,10 +27,18 @@ node {
 		//}
 	}
 	
-	stage('代码编译打包') {
+	stage('镜像制作上传') {
 		sh "tar zcf mysite.tar.gz *.html"
 		def image_name = "mysite"
 		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag} ."
-		sh "docker push ${harbor_url}/${harbor_project}/${image_name}:${tag}"
+		
+		withCredentials([usernamePassword(credentialsId: 'harbor', passwordVariable: 'password', usernameVariable: 'username')]) {
+		    // some block
+			sh "docker login -u ${username} -p ${password} ${harbor_url}"
+			//镜像上传
+			sh "docker push ${harbor_url}/${harbor_project}/${image_name}:${tag}"
+			
+			sh "echo '镜像上传成功'"
+		}
 	}
 }
