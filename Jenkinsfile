@@ -9,8 +9,7 @@ def tag="latest"
 def harbor_url = "8.136.189.162:80"
 //harbor project
 def harbor_project = "mysite"
-//def imagename
-def image_name = "mysite"
+
 node {
         stage('pull code') {
             checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${git_auth}", url: "${git_url}"]]])
@@ -30,6 +29,8 @@ node {
 	
 	stage('代码编译打包') {
 		sh "tar zcf mysite.tar.gz *.html"
+		def image_name = "mysite"
 		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag} ."
+		sh "docker push ${harbor_url}/${harbor_project}/${image_name}:${tag}"
 	}
 }
