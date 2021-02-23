@@ -6,7 +6,7 @@ def git_url = "https://github.com/zxstar/mysite.git/"
 //docker tag
 def tag="latest"
 //harbor url
-def harbor_url = "8.136.189.162"
+def harbor_url = "8.136.189.162:80"
 //harbor project
 def harbor_project = "mysite"
 //def imagename
@@ -30,6 +30,6 @@ node {
 	
 	stage('代码编译打包') {
 		sh "tar zcf mysite.tar.gz *.html"
-		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag}"
+		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag} ."
 	}
 }
