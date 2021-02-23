@@ -1,7 +1,7 @@
 //git凭证ID
 def git_auth = "github-mysite"
 //git的url
-def git_url = "https://github.com/zxstar/mymvnweb.git/"
+def git_url = "https://github.com/zxstar/mysite.git/"
 
 node {
         stage('pull code') {
