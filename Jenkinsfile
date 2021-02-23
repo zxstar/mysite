@@ -11,5 +11,12 @@ node {
 	
 	stage('代码审查') {
 		sh "echo '代码审查'"
+		//定义当前Jenkins的SonarQubeScanner工具
+		//def scanerHome = tool 'sonar-scanner'
+		//withSonarQubeEnv('sonarqube') {
+		//	sh """
+		//		cd ${project_name}
+		//		$(scanerHome}/bin/sonar-scanner
+		//}
 	}
 }
