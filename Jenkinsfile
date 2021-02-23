@@ -10,6 +10,8 @@ def harbor_url = "8.136.189.162:80"
 //harbor project
 def harbor_project = "mysite"
 
+def image_name = "mysite"
+
 node {
         stage('pull code') {
             checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${git_auth}", url: "${git_url}"]]])
@@ -29,7 +31,6 @@ node {
 	
 	stage('镜像制作上传') {
 		sh "tar zcf mysite.tar.gz *.html"
-		def image_name = "mysite"
 		sh "docker build -t ${harbor_url}/${harbor_project}/${image_name}:${tag} ."
 		
 		withCredentials([usernamePassword(credentialsId: 'harbor', passwordVariable: 'password', usernameVariable: 'username')]) {
@@ -40,5 +41,9 @@ node {
 			
 			sh "echo '镜像上传成功'"
 		}
+	}
+	
+	stage('镜像部署') {
+		sshPublisher(publishers: [sshPublisherDesc(configName: 'app', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/opt/jenkins_shell/deploy.sh $harbor_url $harbor_project $image_name $tag', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 	}
 }
